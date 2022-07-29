@@ -37,6 +37,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 }
 );
 
+string corsPolicy = "HabitBuilder";
+
+builder.Services.AddCors(options =>
+    options.AddPolicy(
+        name: corsPolicy,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+        }));
+
 
 var app = builder.Build();
 
@@ -47,6 +57,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(corsPolicy);
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
