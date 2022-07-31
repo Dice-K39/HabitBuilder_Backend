@@ -48,8 +48,10 @@ namespace HabitBuilder_Backend.Controllers
 
             if (result.Succeeded)
             {
-
-                return await Task.FromResult("User has been Registered");
+                var appUser = await _userManager.FindByEmailAsync(model.Email);
+                var user = new UserDTO(appUser.FirstName, appUser.LastName, appUser.Email, appUser.DateCreated);
+                user.Token = GenerateToken(appUser);
+                return await Task.FromResult(user);
 
 
             }
