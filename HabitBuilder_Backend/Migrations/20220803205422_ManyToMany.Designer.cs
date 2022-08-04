@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HabitBuilder_Backend.Migrations
 {
     [DbContext(typeof(UserDBContext))]
-    [Migration("20220728051215_UserRewards")]
-    partial class UserRewards
+    [Migration("20220803205422_ManyToMany")]
+    partial class ManyToMany
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,21 @@ namespace HabitBuilder_Backend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("AppUserUserHabit", b =>
+                {
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("UserHabitsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AppUserId", "UserHabitsId");
+
+                    b.HasIndex("UserHabitsId");
+
+                    b.ToTable("AppUserUserHabit");
+                });
 
             modelBuilder.Entity("HabitBuilder_Backend.Areas.Identity.Data.AppUser", b =>
                 {
@@ -50,11 +65,9 @@ namespace HabitBuilder_Backend.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -108,11 +121,8 @@ namespace HabitBuilder_Backend.Migrations
 
             modelBuilder.Entity("HabitBuilder_Backend.Models.Reward", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Cost")
                         .HasColumnType("int");
@@ -138,21 +148,10 @@ namespace HabitBuilder_Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("DailyCompletion")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MonthlyCompletion")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearlyCompletion")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.ToTable("UserHabits");
                 });
@@ -290,13 +289,19 @@ namespace HabitBuilder_Backend.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("HabitBuilder_Backend.Models.UserHabit", b =>
+            modelBuilder.Entity("AppUserUserHabit", b =>
                 {
-                    b.HasOne("HabitBuilder_Backend.Areas.Identity.Data.AppUser", "AppUser")
+                    b.HasOne("HabitBuilder_Backend.Areas.Identity.Data.AppUser", null)
                         .WithMany()
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("AppUser");
+                    b.HasOne("HabitBuilder_Backend.Models.UserHabit", null)
+                        .WithMany()
+                        .HasForeignKey("UserHabitsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
