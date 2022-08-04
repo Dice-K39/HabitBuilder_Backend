@@ -4,6 +4,7 @@ using HabitBuilder_Backend.Areas.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HabitBuilder_Backend.Migrations
 {
     [DbContext(typeof(UserDBContext))]
-    partial class UserDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220804115212_changedHabitId")]
+    partial class changedHabitId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,20 +24,20 @@ namespace HabitBuilder_Backend.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            //modelBuilder.Entity("AppUserUserHabit", b =>
-            //    {
-            //        b.Property<string>("AppUserId")
-            //            .HasColumnType("nvarchar(450)");
+            modelBuilder.Entity("AppUserUserHabit", b =>
+                {
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
 
-            //        b.Property<int>("UserHabitsId")
-            //            .HasColumnType("int");
+                    b.Property<int>("UserHabitsId")
+                        .HasColumnType("int");
 
-            //        b.HasKey("AppUserId", "UserHabitsId");
+                    b.HasKey("AppUserId", "UserHabitsId");
 
-            //        b.HasIndex("UserHabitsId");
+                    b.HasIndex("UserHabitsId");
 
-            //        b.ToTable("AppUserUserHabit");
-            //    });
+                    b.ToTable("AppUserUserHabit");
+                });
 
             modelBuilder.Entity("HabitBuilder_Backend.Areas.Identity.Data.AppUser", b =>
                 {

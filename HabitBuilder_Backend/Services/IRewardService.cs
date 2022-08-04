@@ -6,6 +6,10 @@ namespace HabitBuilder_Backend.Services
     public interface IRewardService
     {
         Task<bool> AddRewardAsync(Reward reward, AppUser user);
+     
+
+
+
 
 
     }
